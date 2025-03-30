@@ -25,11 +25,13 @@ struct CourseProjectApp: App {
     // go to login if not authenticated
     var body: some Scene {
         WindowGroup {
-            if isAuthenticated{
-                ContentView()
-            }
-            else {
-                LoginView(isAuthenticated: $isAuthenticated)
+            NavigationStack{
+                if isAuthenticated{
+                    ContentView()
+                }
+                else {
+                    LoginView(isAuthenticated: $isAuthenticated)
+                }
             }
         }
         .modelContainer(for: [UserProfile.self])

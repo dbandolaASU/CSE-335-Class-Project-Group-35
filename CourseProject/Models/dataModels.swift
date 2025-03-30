@@ -50,3 +50,21 @@ final class CarCard {
         self.owner = owner
     }
 }
+
+enum AppTab: String, CaseIterable {
+    case garage = "Garage"
+    case trade = "Trade"
+    case home = "Home"
+    case map = "Map"
+    case profile = "Profile"
+    
+    var icon: String {
+        switch self {
+        case .garage: return "car.fill"
+        case .trade: return "arrow.triangle.2.circlepath"
+        case .home: return "house.fill"
+        case .map: return "map.fill"
+        case .profile: return "person.fill"
+        }
+    }
+}

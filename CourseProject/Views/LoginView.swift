@@ -93,10 +93,11 @@ struct LoginView: View {
                     }
                     // create account link
                     NavigationLink{
-                        ContentView()
+                        SignUpView()
                     } label: {
                         Text("Create new account")
                             .foregroundColor(Color(hex: "7da5a5"))
+                            .contentShape(Rectangle())
                     }
                 }
                 .padding()
