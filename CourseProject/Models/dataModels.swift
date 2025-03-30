@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import CoreLocation
 
 @Model
 final class UserProfile {
@@ -48,6 +49,40 @@ final class CarCard {
         self.model = model
         self.year = year
         self.owner = owner
+    }
+}
+
+@Model
+final class Meetup {
+    var title: String
+    var meetupDescription: String
+    var date: Date
+    var time: Date
+    
+    var locationName: String
+    var latitude: Double
+    var longitude: Double
+    
+    @Relationship(deleteRule: .nullify)
+    var host: UserProfile?
+        
+    init(
+        title: String,
+        meetupDescription: String,
+        date: Date,
+        time: Date,
+        locationName: String,
+        coordinate: CLLocationCoordinate2D,
+        host: UserProfile? = nil
+    ){
+        self.title = title
+        self.meetupDescription = meetupDescription
+        self.date = date
+        self.time = time
+        self.locationName = locationName
+        self.latitude = coordinate.latitude
+        self.longitude = coordinate.longitude
+        self.host = host
     }
 }
 

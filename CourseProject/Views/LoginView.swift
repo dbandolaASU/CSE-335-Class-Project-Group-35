@@ -36,6 +36,7 @@ struct LoginView: View {
                 Image(systemName: "car.fill")
                     .font(.system(size: 200))
                     .foregroundColor(Color(hex: "#ffeff0"))
+                    .padding(.bottom, 20)
                 
                 VStack (spacing: 20){
                     // username field
