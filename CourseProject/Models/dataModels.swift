@@ -28,6 +28,11 @@ final class UserProfile {
         self.password = password
         self.joinDate = joinDate
     }
+    
+    static var dummy: UserProfile {
+        let user = UserProfile(username: "test", password: "test", joinDate: .now)
+        return user
+    }
 }
 
 @Model

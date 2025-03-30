@@ -10,23 +10,40 @@ import SwiftData
 
 @main
 struct CourseProjectApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    @State private var isAuthenticated = false
+    let container: ModelContainer
 
+    init() {
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            container = try ModelContainer(for: UserProfile.self, CarCard.self)
+            insertDummyData()
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Failed to create container")
         }
-    }()
-
+    }
+    
+    // go to login if not authenticated
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if isAuthenticated{
+                ContentView()
+            }
+            else {
+                LoginView(isAuthenticated: $isAuthenticated)
+            }
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(for: [UserProfile.self])
+    }
+    
+    private func insertDummyData() {
+        Task { @MainActor in
+            let context = container.mainContext
+            // Check if dummy exists first
+            let descriptor = FetchDescriptor<UserProfile>(predicate: #Predicate { $0.username == "test" })
+            if (try? context.fetch(descriptor))?.isEmpty ?? true {
+                context.insert(UserProfile.dummy)
+                print("Dummy user inserted")
+            }
+        }
     }
 }
