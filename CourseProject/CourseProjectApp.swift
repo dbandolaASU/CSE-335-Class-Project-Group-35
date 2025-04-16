@@ -10,42 +10,48 @@ import SwiftData
 
 @main
 struct CourseProjectApp: App {
-    @State private var isAuthenticated = false
+    @State private var authState = AuthState()
     let container: ModelContainer
-
+    
     init() {
         do {
             container = try ModelContainer(for: UserProfile.self, CarCard.self)
-            insertDummyData()
         } catch {
             fatalError("Failed to create container")
         }
     }
     
-    // go to login if not authenticated
     var body: some Scene {
         WindowGroup {
-            NavigationStack{
-                if isAuthenticated{
+            NavigationStack {
+                if authState.isAuthenticated {
                     ContentView()
+                } else {
+                    LoginView()
                 }
-                else {
-                    LoginView(isAuthenticated: $isAuthenticated)
-                }
+            }
+            .environment(authState) // Inject AuthState
+            .task {
+                await initializeAuth()
             }
         }
-        .modelContainer(for: [UserProfile.self])
+        .modelContainer(container)
     }
     
-    private func insertDummyData() {
-        Task { @MainActor in
-            let context = container.mainContext
-            // Check if dummy exists first
-            let descriptor = FetchDescriptor<UserProfile>(predicate: #Predicate { $0.username == "test" })
-            if (try? context.fetch(descriptor))?.isEmpty ?? true {
-                context.insert(UserProfile.dummy)
-                print("Dummy user inserted")
-            }
+    private func initializeAuth() async {
+        // Initialize AuthState with context
+        await MainActor.run {
+            authState.setup(modelContext: container.mainContext)
+        }
+        
+        // Insert dummy data if needed
+        let descriptor = FetchDescriptor<UserProfile>(
+            predicate: #Predicate { $0.username == "test" }
+        )
+        
+        if (try? container.mainContext.fetch(descriptor))?.isEmpty ?? true {
+            container.mainContext.insert(UserProfile.dummy)
+            print("Dummy user inserted")
         }
     }
 }

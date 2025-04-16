@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MapView: View {
+    @Environment(AuthState.self) private var authState
+    
     var body: some View {
         Text("MAP")
     }

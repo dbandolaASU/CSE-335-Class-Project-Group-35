@@ -9,7 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selectedTab: AppTab = .home
+    @Environment(AuthState.self) private var authState
+    @Environment(\.modelContext) private var modelContext
+    @State private var selectedTab: AppTab = .garage
     
     init() {
             let appearance = UITabBarAppearance()
@@ -52,13 +54,6 @@ struct ContentView: View {
                     }
                     .tag(AppTab.trade)
                 
-                // Home View
-                HomeView()
-                    .tabItem {
-                        Label(AppTab.home.rawValue, systemImage: AppTab.home.icon)
-                    }
-                    .tag(AppTab.home)
-                
                 // Map View
                 MapView()
                     .tabItem {
@@ -79,6 +74,12 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: UserProfile.self)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: UserProfile.self, configurations: config)
+    let authState = AuthState()
+    authState.setup(modelContext: container.mainContext)
+    
+    return ContentView()
+        .environment(authState)
+        .modelContainer(container)
 }
