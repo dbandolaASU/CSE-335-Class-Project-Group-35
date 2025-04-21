@@ -15,6 +15,7 @@ final class UserProfile {
     var joinDate: Date
     var password: String
     var profileImage: Data?
+    var friendCode: String
     
     // relationships
     @Relationship(deleteRule: .cascade)
@@ -28,6 +29,7 @@ final class UserProfile {
         self.username = username
         self.password = password
         self.joinDate = joinDate
+        self.friendCode = UUID().uuidString.prefix(6).uppercased()
     }
     
     static var dummy: UserProfile {
@@ -36,19 +38,47 @@ final class UserProfile {
     }
 }
 
+//Car card info which is partly autofilled with api call
 @Model
 final class CarCard {
     var make: String
     var model: String
     var year: Int
+    var cylinders: Int?
+    var drive: String?
+    var fuelType: String?
+    var transmission: String?
+    var displacement: Double?
     
     var owner: UserProfile
     
-    init(make: String, model: String, year: Int, owner: UserProfile) {
+    init(make: String, model: String, year: Int, owner: UserProfile,
+         cylinders: Int? = nil, drive: String? = nil, fuelType: String? = nil,
+         transmission: String? = nil, displacement: Double? = nil) {
+        
         self.make = make
         self.model = model
         self.year = year
         self.owner = owner
+        self.cylinders = cylinders
+        self.drive = drive
+        self.fuelType = fuelType
+        self.transmission = transmission
+        self.displacement = displacement
+    }
+}
+
+//trade session to keep track of a trade in memory to acces with code
+@Model
+final class TradeSession {
+    var code: String
+    var card: CarCard
+    var sender: UserProfile
+
+    init(code: String, card: CarCard, sender: UserProfile) {
+        self.code = code
+        self.card = card
+        self.sender = sender
     }
 }
 
