@@ -14,7 +14,7 @@ struct ProfileView: View {
     
     var body: some View {
         ZStack{
-            Color(hex: "#999999")
+            Color(hex: "#e3e4e5")
                 .ignoresSafeArea()
             VStack{
                 Text("Your Profile")
@@ -24,9 +24,9 @@ struct ProfileView: View {
                         VStack{
                             HStack{
                                 Text("Username: ")
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color(hex: "#1f1c18"))
                                 Text(authState.currentUser?.username ?? "")
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color(hex: "#1f1c18"))
                             }
                             HStack{
                                 Rectangle()
@@ -37,9 +37,9 @@ struct ProfileView: View {
                             .padding(.vertical, 0)
                             HStack{
                                 Text("Date joined: ")
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color(hex: "#1f1c18"))
                                 Text(authState.currentUser?.joinDate.formatted(.dateTime.month().day().year()) ?? "No join date")
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color(hex: "#1f1c18"))
 
                             }
                         }

@@ -247,39 +247,3 @@ struct TradeInitiateView: View {
         tradeCode = trade.code
     }
 }
-
-
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: UserProfile.self, CarCard.self, TradeSession.self, configurations: config)
-    let context = container.mainContext
-
-    do {
-        // user
-        let user = UserProfile(username: "jake", password: "pass")
-        user.friendCode = "J4K3M3"
-        context.insert(user)
-
-        // friend
-        let friend = UserProfile(username: "alex", password: "pass")
-        friend.friendCode = "ALX123"
-        context.insert(friend)
-
-        // set friends
-        user.friends.append(friend)
-        friend.friends.append(user)
-        
-        //ive cars to users garage
-        context.insert(CarCard(make: "Skyline", model: "GTR", year: 1999, owner: user))
-        context.insert(CarCard(make: "Subaru", model: "WRX", year: 2005, owner: user))
-
-        let authState = AuthState()
-        authState.setup(modelContext: context)
-        authState.login(username: user.username, password: user.password)
-
-        return TradeView()
-            .environment(authState)
-            .modelContainer(container)
-    }
-}
