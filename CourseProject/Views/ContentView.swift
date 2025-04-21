@@ -13,29 +13,29 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var selectedTab: AppTab = .garage
     
+    // setup app ui views
     init() {
-            let appearance = UITabBarAppearance()
-            
-            // Background
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = UIColor(Color(hex: "#1f1c18"))
-            
-            // Selected item
-            appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color(hex: "#7da5a5"))
-            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-                .foregroundColor: UIColor(Color(hex: "#7da5a5"))
-            ]
-            
-            // Unselected items
-            appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Color(hex: "#ffeff0")).withAlphaComponent(0.6)
-            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-                .foregroundColor: UIColor(Color(hex: "#ffeff0")).withAlphaComponent(0.6)
-            ]
-            
-            // Apply to all styles
-            UITabBar.appearance().standardAppearance = appearance
-            UITabBar.appearance().scrollEdgeAppearance = appearance
-        }
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor(Color(hex: "#1f1c18"))
+        
+        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color(hex: "#7da5a5"))
+        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor(Color(hex: "#7da5a5")),
+            .font: UIFont.systemFont(ofSize: 12, weight: .semibold)
+        ]
+        
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = UIColor(Color(hex: "#ffeff0")).withAlphaComponent(0.6)
+        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor(Color(hex: "#ffeff0")).withAlphaComponent(0.6),
+            .font: UIFont.systemFont(ofSize: 12, weight: .medium)
+        ]
+        
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITabBar.appearance().isTranslucent = false
+
+    }
     
     var body: some View {
         VStack {
@@ -69,6 +69,7 @@ struct ContentView: View {
                     .tag(AppTab.profile)
             }
             .tint(Color(hex: "7da5a5"))
+            .toolbarBackground(.hidden, for: .navigationBar)
         }
     }
 }

@@ -15,7 +15,7 @@ struct CourseProjectApp: App {
     
     init() {
         do {
-            container = try ModelContainer(for: UserProfile.self, CarCard.self, TradeSession.self)
+            container = try ModelContainer(for: Meetup.self, UserProfile.self, CarCard.self, TradeSession.self)
         } catch {
             fatalError("Failed to create container")
         }

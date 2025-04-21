@@ -16,6 +16,7 @@ final class UserProfile {
     var password: String
     var profileImage: Data?
     var friendCode: String
+
     
     // relationships
     @Relationship(deleteRule: .cascade)
@@ -88,31 +89,67 @@ final class Meetup {
     var meetupDescription: String
     var date: Date
     var time: Date
-    
-    var locationName: String
+    var address: String
     var latitude: Double
     var longitude: Double
+    var isActive: Bool = true
     
     @Relationship(deleteRule: .nullify)
     var host: UserProfile?
-        
+    
+    @Relationship(deleteRule: .nullify)
+    var attendees: [UserProfile] = []
+    
+    // Computed property for coordinate
+    var coordinate: CLLocationCoordinate2D {
+        get {
+            CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        }
+        set {
+            latitude = newValue.latitude
+            longitude = newValue.longitude
+        }
+    }
+    
     init(
         title: String,
         meetupDescription: String,
         date: Date,
         time: Date,
-        locationName: String,
+        address: String,
         coordinate: CLLocationCoordinate2D,
-        host: UserProfile? = nil
-    ){
+        host: UserProfile? = nil,
+        attendees: [UserProfile] = []
+    ) {
         self.title = title
         self.meetupDescription = meetupDescription
         self.date = date
         self.time = time
-        self.locationName = locationName
+        self.address = address
         self.latitude = coordinate.latitude
         self.longitude = coordinate.longitude
         self.host = host
+        self.attendees = attendees
+    }
+    
+    func formattedDateTime() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: combinedDateTime())
+    }
+    
+    private func combinedDateTime() -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        
+        return calendar.date(
+            bySettingHour: timeComponents.hour ?? 0,
+            minute: timeComponents.minute ?? 0,
+            second: 0,
+            of: calendar.date(from: dateComponents) ?? Date()
+        ) ?? Date()
     }
 }
 
@@ -131,3 +168,4 @@ enum AppTab: String, CaseIterable {
         }
     }
 }
+

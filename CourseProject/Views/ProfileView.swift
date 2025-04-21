@@ -8,11 +8,67 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Environment(AuthState.self) private var authState
+    @Environment(\.modelContext) private var modelContext
+    
+    
     var body: some View {
-        Text("PROFILE")
-    }
-}
+        ZStack{
+            Color(hex: "#999999")
+                .ignoresSafeArea()
+            VStack{
+                Text("Your Profile")
+                    .foregroundStyle(Color(hex: "#0000000"))
+                RoundedRectangle(cornerRadius: 8)
+                    .overlay(
+                        VStack{
+                            HStack{
+                                Text("Username: ")
+                                    .foregroundStyle(.white)
+                                Text(authState.currentUser?.username ?? "")
+                                    .foregroundStyle(.white)
+                            }
+                            HStack{
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .foregroundColor(.white)
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 0)
+                            HStack{
+                                Text("Date joined: ")
+                                    .foregroundStyle(.white)
+                                Text(authState.currentUser?.joinDate.formatted(.dateTime.month().day().year()) ?? "No join date")
+                                    .foregroundStyle(.white)
 
-#Preview {
-    ProfileView()
+                            }
+                        }
+                       
+                )
+                    .padding()
+                    .frame(width: 400, height: 100)
+                    .foregroundStyle(Color(hex: "#ffeff0").opacity(0.3))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color(hex: "#ffeff0"), lineWidth: 1)
+                            .padding()
+                    )
+        
+                Button {
+                    authState.currentUser = nil
+                    authState.isAuthenticated = false
+                    
+                } label: {
+                    Text("Log out")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(hex: "7da5a5"))
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding()
+                
+            }
+        }
+    }
 }
